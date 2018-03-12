@@ -1,0 +1,5 @@
+importFrom("utils", "read.table", "write.table", "installed.packages")
+importFrom("foreach", "foreach", "%do%", "%dopar%")
+importFrom("parallel", "makeCluster", "stopCluster")
+importFrom("doParallel", "registerDoParallel")
+exportPattern("apt.snp6.process", "apt.snp6.process.batch")

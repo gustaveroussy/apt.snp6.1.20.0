@@ -1,0 +1,14 @@
+Encoding: UTF-8
+Package: apt.snp6.1.20.0
+Type: Package
+Title: Affymetrix GenomeWideSNP_6 processing using apt-copynumber-workflow (1.20.0)
+Version: 0.1.4
+Author: Bastien Job [aut, cre]
+Date: 2018-03-10
+Maintainer: Bastien Job <bastien.job@inserm.fr>
+Description: Process GenomeWideSNP_6 CEL files using apt-copynumber-workflow (1.20.0) from APT.
+Depends: R (>= 3.2.1)
+Imports: foreach, parallel, doParallel
+License: Artistic-2.0
+LazyData: TRUE
+NeedsCompilation: no
