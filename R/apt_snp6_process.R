@@ -29,7 +29,7 @@ apt.snp6.process <- function(CEL = NULL, samplename = NULL, out.dir = getwd(), t
   res.pkg.name <- paste0("GenomeWideSNP.6.", tolower(apt.build))
   if (!(res.pkg.name %in% utils::installed.packages())) stop(paste0("Package ", res.pkg.name, " not found !"))
   res.dir <- system.file("apt/res/", package = res.pkg.name)
-  require(res.pkg.name, character.only = TRUE)
+  suppressPackageStartupMessages(require(res.pkg.name, character.only = TRUE))
   apt.files <- annotation.set.describe()
 
   ## Checking annotation files availability
@@ -39,11 +39,11 @@ apt.snp6.process <- function(CEL = NULL, samplename = NULL, out.dir = getwd(), t
   # message("Identying OS ...")
   os.list <- c("linux", "windows", "osx")
   my.os <- get.os()
-  message(tmsg(paste0("OS is reported as : ", my.os)))
+  tmsg(paste0("OS is reported as : ", my.os))
   if (!is.null(force.OS)) {
     if (!(force.OS %in% os.list)) stop("Specified forced OS is not supported !")
     my.os <- force.OS
-    message(tmsg(paste0("WARNING : Forcing OS to : ", my.os)))
+    tmsg(paste0("WARNING : Forcing OS to : ", my.os))
   } else if (!(my.os %in% os.list)) stop(paste0("Current OS [", my.os, "] not supported ! If you are sure of your OS support, use force.OS option with any of 'linux', 'windows', 'osx'"))
 
   if (my.os == "windows") my.os <- paste0(my.os, ".exe")
@@ -72,7 +72,7 @@ apt.snp6.process <- function(CEL = NULL, samplename = NULL, out.dir = getwd(), t
                paste0(" -o ", out.dir.w, " "),
                CEL)
 
-  message(tmsg("Running APT ..."))
+  tmsg("Running APT ...")
   apt.cmd.res <- try(system(command = paste0(apt.cmd, collapse = ""), intern = TRUE))
 
   # if (is.character(apt.cmd.res)) {
@@ -80,7 +80,7 @@ apt.snp6.process <- function(CEL = NULL, samplename = NULL, out.dir = getwd(), t
   #   stop(tmsg("An error occured ! Please inspect the log !"))
   # }
 
-  message(tmsg("Converting CNCHP to OSCHP ..."))
+  tmsg("Converting CNCHP to OSCHP ...")
   cncf <- list.files(path = out.dir.w, pattern = "\\.cn5.cnchp$", full.names = TRUE, recursive = FALSE, ignore.case = TRUE)
 
   if (!file.exists(cncf)) {
@@ -102,7 +102,7 @@ apt.snp6.process <- function(CEL = NULL, samplename = NULL, out.dir = getwd(), t
   qcf <- list.files(path = out.dir.w, pattern = "\\.CopyNumber\\.Report\\.txt$", full.names = TRUE, recursive = FALSE, ignore.case = TRUE)
 
   ## Renaming files
-  message(tmsg("Renaming files ..."))
+  tmsg("Renaming files ...")
   new.oscf <- paste0(out.dir.p, "/", samplename, "_", tool.version, "_", apt.build, ".oschp")
   new.logf <- paste0(out.dir.p, "/", samplename, "_", tool.version, "_", apt.build, ".log")
   new.qcf <- paste0(out.dir.p, "/", samplename, "_", tool.version, "_", apt.build, ".qc.txt")
@@ -112,12 +112,12 @@ apt.snp6.process <- function(CEL = NULL, samplename = NULL, out.dir = getwd(), t
 
   ## Cleaning
   if(!temp.files.keep) {
-    message(tmsg("Removing temporary files ..."))
+    tmsg("Removing temporary files ...")
     unlink(out.dir.w, recursive = TRUE, force = TRUE)
   }
   setwd(oridir)
 
-  message(tmsg("Done."))
+  tmsg("Done.")
   return(new.oscf)
 }
 
@@ -169,7 +169,7 @@ apt.snp6.process.batch <- function(CEL.list.file = NULL, nthread = 1, cluster.ty
 }
 
 ## Print thread-tagged message
-tmsg <- function(text = NULL) { return(paste0(text, " [", Sys.info()[['nodename']], ":", Sys.getpid(), "]")) }
+tmsg <- function(text = NULL) { message(paste0(" [", Sys.info()[['nodename']], ":", Sys.getpid(), "] ", text)) }
 
 ## A more robust way to get machine OS type
 get.os <- function(){
